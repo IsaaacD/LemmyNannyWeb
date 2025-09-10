@@ -14,14 +14,22 @@ function addListItem(processed) {
             type = "posts about";
             break;
     }
-    li.innerHTML = `<div style='border-radius:2px;border:1px solid navy;padding:2em;margin-bottom:1em;'>
+    li.innerHTML = `<div>
+    <div style="background-color:grey;color:white;padding:1em;">
+                    <div>Posted Date: ${processed.createdDate} </div>
+                    <div>${processed.extraInfo}</div>
+    </div>
+                    <div style='border-radius:2px;border:1px solid navy;padding:2em;'>
                         <div style="border:1px solid lightgrey;padding:0.2em;"> <img src="${processed.avatarUrl || 'Lemmy_logo.svg.png'}" style="width:70px"/> 
-                                <strong>${processed.username} ${type} <a href="${processed.postUrl}">${processed.title || ''}</a>:</strong>${processed.content}
-                                <div>Posted: ${processed.createdDate} ${processed.extraInfo}</div>
+                                <strong>${processed.username} ${type} <a href="${processed.postUrl}">${processed.title || ''}</a>:</strong>
+                                <div style="background-color:#f7f7f1;padding:0.5em;">${processed.content}</div>
+                                
                         </div>
-                        <div class="p-2" style="background-color:lightgrey;"><strong>Reported?</strong> ${processed.reason}</div>
-                        <div>Processed on ${processed.processedOn} <a style="float:right;" href="${processed.url}">Link on Lemmy</a></div>
+                        <div class="p-2" style="background-color:#f7f7f1;"><strong>Reported?</strong> ${processed.reason}</div>
+                        <div> <a style="float:right;" href="${processed.url}">Link on Lemmy</a></div>
                         
+                    </div>
+                    <div style="margin-bottom:1em;">Processed on ${processed.processedOn}</div>
                     </div>`;
     
 }
