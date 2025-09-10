@@ -9,5 +9,10 @@ namespace LemmyWeb.Hubs
         {
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
+
+        public override async Task OnConnectedAsync()
+        {
+            await Clients.Caller.SendAsync("ReceivedInitial", Webhook.Processeds);
+        }
     }
 }
