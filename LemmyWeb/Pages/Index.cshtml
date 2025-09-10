@@ -1,27 +1,22 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Nanny Feed";
 }
-<div class="align-content-center">
+<div class="" >
+     <h1 style="text-align:center;">Nanny Feed</h1>
     <img src="~/LemmyNannyLogo.png" style="display:block;margin:auto;width:20em;" alt="LemmyNanny Logo" width="50%" />
     <div class="container">
-        <div class="row p-1">
-            <div class="col-3">
+<div class="row">
 
-            </div>
-            <div class="col-6">
-                Cleaning up Lemmy instances around the globe! Realtime insights! Below is real time look at what LemmyNanny is doing. It's open source, so check it out on <a href="https://github.com/IsaaacD/LemmyNanny"> GitHub - LemmyNanny</a>. Newest posts LemmyNanny is scaping show on the top, so no need to scroll!
-            </div>
-            <div class="col-3">
-
-            </div>
-        </div>
-
-    </div>
 </div>
 <div class="container">
     <div class="row p-1">
+        <div class="col-12 mb-2 mt-1" style="text-align:center;">
+            <h2>Tidying up Lemmy, bit by bit.</h2>
+            <input type="button" id="btnPause" class="btn btn-primary" value="Pause feed"  />
+            <div id="lastProcessed" class="mt-1 mb-1">Last Processed:</div>
+        </div>
         <div class="col-12">
             <ul id="messagesList"></ul>
         </div>

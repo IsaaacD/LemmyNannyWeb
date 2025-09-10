@@ -403,3 +403,4 @@ _site/
 api/
 /LemmyNanny/appsettings.json
 /LemmyNanny/appsettings.json
+/LemmyWeb/appsettings.json

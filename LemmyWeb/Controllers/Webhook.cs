@@ -2,6 +2,7 @@
 using Markdig;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace LemmyWeb.Controllers
@@ -11,21 +12,30 @@ namespace LemmyWeb.Controllers
     {
         public static List<Processed> Processeds = [];
         private readonly IHubContext<ProcessedHub> _hubContext;
-        public Webhook(IHubContext<ProcessedHub> processedHub)
+        private readonly string _secretKey;
+        public Webhook(IHubContext<ProcessedHub> processedHub, IConfiguration config)
         {
             _hubContext = processedHub;
+            _secretKey = config["SecretKey"] ?? throw new Exception("SecretKey not set");
         }
 
         [HttpPost]
         public async Task<string> PostAsync([FromBody] Processed value)
         {
             //ar val = JsonSerializer.Deserialize<Processed>(value);
-            Processeds.Add(value);
-            if (Processeds.Count > 50)
-                Processeds.RemoveAt(0);
-            value.Content = Markdown.ToHtml(value.Content ?? "");
-            value.Reason = Markdown.ToHtml(value.Reason ?? "");
-            await _hubContext.Clients.All.SendAsync("ReceiveProcessed", value);
+            if (Request.Headers.ContainsKey("ClientSecret"))
+            {
+                if (Request.Headers["ClientSecret"].ToString() == _secretKey)
+                {
+                    Processeds.Add(value);
+                    if (Processeds.Count > 50)
+                        Processeds.RemoveAt(0);
+                    value.Content = Markdown.ToHtml(value.Content ?? "");
+                    value.Reason = Markdown.ToHtml(value.Reason ?? "");
+                    await _hubContext.Clients.All.SendAsync("ReceiveProcessed", value);
+                }
+            }
+
             return await Task.FromResult(string.Empty);
         }
     }
