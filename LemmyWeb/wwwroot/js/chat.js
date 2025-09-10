@@ -14,7 +14,7 @@ function addListItem(processed) {
             type = "posts about";
             break;
     }
-    li.innerHTML = `<div>
+    li.innerHTML = `<div style="transition:scale 1s ease-in;scale:0.1;">
     <div style="background-color:grey;color:white;padding:1em;">
                     <div>Posted Date: ${processed.createdDate} </div>
                     <div>${processed.extraInfo}</div>
@@ -31,7 +31,9 @@ function addListItem(processed) {
                     </div>
                     <div style="margin-bottom:1em;">Processed on ${processed.processedOn}</div>
                     </div>`;
-    
+    setTimeout(() => {
+        li.firstChild.style.scale = 1.0;
+    }, 200);
 }
 var connection = new signalR.HubConnectionBuilder().withUrl("/processed").build();
 
