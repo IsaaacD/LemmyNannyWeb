@@ -81,6 +81,10 @@ connection.on("ReceivedInitial", function (processeds) {
     }
 });
 
+connection.on("ViewerCount", function (viewcount) {
+    document.getElementById('numWatcher').innerText = `(${viewcount} sailors sailing wit ye.)`
+});
+
 connection.start().then(function () {
     //document.getElementById("sendButton").disabled = false;
 }).catch(function (err) {
