@@ -35,7 +35,7 @@ function addListItem(processed) {
                                
     </div>
                         
-    <div class="p-2" style="background-color:#f7f7f1;"><strong>LemmyNanny Reported?</strong> ${processed.reason}</div>`
+    <div class="p-2" style="background-color:white;border: 4px dashed aliceblue;"><strong>LemmyNanny Reported?</strong> ${processed.reason}</div>`
 
     if (processed.processedType === 1) {
         innerHtml += `<div> <a style="float:right;" href="${processed.url}">View comment on Lemmy</a></div>`;
