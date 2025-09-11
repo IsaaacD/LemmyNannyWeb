@@ -82,7 +82,7 @@ connection.on("ReceivedInitial", function (processeds) {
 });
 
 connection.on("ViewerCount", function (viewcount) {
-    document.getElementById('numWatcher').innerText = `(${viewcount} sailors sailing wit ye.)`
+    document.getElementById('numWatcher').innerText = `(${viewcount-1} sailors sailing wit ye.)`
 });
 
 connection.start().then(function () {
