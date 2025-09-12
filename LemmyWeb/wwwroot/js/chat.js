@@ -19,12 +19,14 @@ function addListItem(processed) {
             type = "posts";
             break;
     }
+    let createdDate = new Date(processed.createdDate).toString();
+    createdDate = createdDate.split('GMT')[0];
     let innerHtml = `           
   <div class="card-header" style="background-color:#43738e;color:white;padding:1em;">
       <i class="fas fa-solid fa-signs-post"></i> <a style="color:white;" href="${processed.postUrl}">${processed.title}</a>
   </div>
   <div class="card-body" style="background-color:white;">
-      <div style="text-align:right;margin-right:0.5em;" class="mr-1"> ${new Date(processed.createdDate)}</div> 
+      <div style="text-align:right;margin-right:0.5em;" class="mr-1"> ${createdDate}</div> 
             <div style="padding:0.2em;background-color:white"> <img src="${processed.avatarUrl || 'Lemmy_logo.svg.png'}" style="width:70px"/> 
             <strong>${processed.username} ${type}: </strong>
             <div style="padding:0.5em; margin-bottom:1em;">
@@ -34,13 +36,14 @@ function addListItem(processed) {
     if (processed.thumbnailUrl) {
         innerHtml += `<img src=${processed.thumbnailUrl}/>`
     }
-
+    let processedOn = new Date(processed.processedOn).toString();
+    processedOn = processedOn.split('GMT')[0];
     innerHtml += `
                 <span class="fas fa-quote-right fa-lg text-warning me-2" style="float:right;"></span>
             </div>                     
     </div>        
     <div class="p-2" style="background-color:white;border: 4px dashed ${processed.isReported ? 'darksalmon' : 'aliceblue'};"><strong>LemmyNanny Reported?</strong> ${processed.reason}</div>
-        <div style="float:left;color:lightgrey;" data-toggle="tooltip" data-placement="top" title="Processed: ${new Date(processed.processedOn)}">${processed.extraInfo}</div>`;
+        <div style="float:left;color:lightgrey;" data-toggle="tooltip" data-placement="top" title="${processedOn}">${processed.extraInfo}</div>`;
 
     if (processed.processedType === 1) {
         innerHtml += `<div> <a style="float:right;" href="${processed.url}">View comment on Lemmy</a></div>`;
