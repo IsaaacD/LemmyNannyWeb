@@ -57,6 +57,9 @@ namespace LemmyWeb.Controllers
         public string? CreatedDate { get; set; }
         public string? PostUrl { get; set; }
         public string? ExtraInfo { get; set; }
+        public string? CommunityName { get; set; }
+        public int WordCount { get; set; }
+        public string? ThumbnailUrl { get; set; }
     }
     public enum ProcessedType
     {

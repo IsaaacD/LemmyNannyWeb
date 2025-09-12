@@ -19,26 +19,33 @@ function addListItem(processed) {
             type = "posts";
             break;
     }
-    let innerHtml =  `           
+    let innerHtml = `           
   <div class="card-header" style="background-color:#43738e;color:white;padding:1em;">
-      <a style="color:white;float:right;" href="${processed.postUrl}">${processed.extraInfo} (click for post)</a>
+      <i class="fas fa-solid fa-signs-post"></i> <a style="color:white;" href="${processed.postUrl}">${processed.title}</a>
   </div>
   <div class="card-body" style="background-color:white;">
-      <div style="text-align:right;margin-right:0.5em;" class="mr-1"> Posted: ${processed.createdDate} (UTC)</div> 
+      <div style="text-align:right;margin-right:0.5em;" class="mr-1"> ${new Date(processed.createdDate)}</div> 
             <div style="padding:0.2em;background-color:white"> <img src="${processed.avatarUrl || 'Lemmy_logo.svg.png'}" style="width:70px"/> 
             <strong>${processed.username} ${type}: </strong>
             <div style="padding:0.5em; margin-bottom:1em;">
                 <span class="fas fa-quote-left fa-lg text-warning me-2"></span>
-                ${processed.content}
+                ${processed.content}`;
+
+    if (processed.thumbnailUrl) {
+        innerHtml += `<img src=${processed.thumbnailUrl}/>`
+    }
+
+    innerHtml += `
                 <span class="fas fa-quote-right fa-lg text-warning me-2" style="float:right;"></span>
-            </div>
-                               
-    </div>
-                        
-    <div class="p-2" style="background-color:white;border: 4px dashed aliceblue;"><strong>LemmyNanny Reported?</strong> ${processed.reason}</div>`
+            </div>                     
+    </div>        
+    <div class="p-2" style="background-color:white;border: 4px dashed ${processed.isReported ? 'darksalmon' : 'aliceblue'};"><strong>LemmyNanny Reported?</strong> ${processed.reason}</div>
+        <div style="float:left;color:lightgrey;" data-toggle="tooltip" data-placement="top" title="Processed: ${new Date(processed.processedOn)}">${processed.extraInfo}</div>`;
 
     if (processed.processedType === 1) {
         innerHtml += `<div> <a style="float:right;" href="${processed.url}">View comment on Lemmy</a></div>`;
+    } else {
+        innerHtml += `<div> <a style="float:right;" href="${processed.postUrl}">View post on Lemmy</a></div>`;
     }
     
     innerHtml += `</div>`;
@@ -64,6 +71,7 @@ let pauseButton = document.getElementById("btnPause");
 //document.getElementById("sendButton").disabled = true;
 
 connection.on("ReceiveProcessed", function (processed) {
+    //console.log(processed);
     if (paused) {
         pausedQueue.push(processed);
         pauseButton.value = `Resume feed (${pausedQueue.length} new)`;
@@ -85,14 +93,14 @@ connection.on("ReceivedInitial", function (processeds) {
 });
 
 connection.on("ViewerCount", function (viewcount) {
-    document.getElementById('numWatcher').innerText = `(${viewcount-1} sailors sailing wit ye.)`
+    document.getElementById('numWatcher').innerText = `${viewcount - 1} sailors sailing wit ye.`;
 });
 
-connection.start().then(function () {
-    //document.getElementById("sendButton").disabled = false;
-}).catch(function (err) {
-    return console.error(err.toString());
-});
+//connection.start().then(function () {
+//    //document.getElementById("sendButton").disabled = false;
+//}).catch(function (err) {
+//    return console.error(err.toString());
+//});
 
 pauseButton.addEventListener("click", function (event) {
     paused = !paused;
@@ -108,3 +116,86 @@ pauseButton.addEventListener("click", function (event) {
     }
     event.preventDefault();
 });
+
+
+var startTimeout = null;
+var retryTimeout = null;
+
+async function start() {
+    try {
+        if (retryTimeout) {
+            clearTimeout(retryTimeout);
+        }
+        startTimeout = null;
+        await connection.start();
+        console.assert(connection.state === signalR.HubConnectionState.Connected);
+
+        if (isOnline()) {
+            document.getElementById('status').classList = "badge badge-pill bg-success";
+            document.getElementById('status').innerText = "online";
+        }
+
+    } catch (err) {
+        retryTimeout = setTimeout(connectionRetryLogic, 1000);
+    }
+};
+function connectionRetryLogic() {
+    if (isOnline())
+        return;
+
+    if (retryTimeout) {
+        // allready retrying
+    }
+
+    if (startTimeout) {
+        clearTimeout(startTimeout);
+        tryCount--;
+        console.log('cancelling startTimeout');
+    }
+
+    console.log('connection closed retrying');
+    tryCount++;
+    document.getElementById('status').classList = "badge badge-pill bg-warning";
+    document.getElementById('status').innerText = "reconnect";
+    if (tryCount > 5) {
+        document.getElementById('status').classList = "badge badge-pill bg-danger";
+        document.getElementById('status').innerText = "offline";
+    } else {
+        startTimeout = setTimeout(async () => await start(), 1);
+    }
+
+}
+
+connection.onclose(async () => {
+    //connectionRetryLogic();
+    document.getElementById('status').classList = "badge badge-pill bg-danger";
+    document.getElementById('status').innerText = "offline";
+    connectionRetryLogic();
+});
+
+connection.onreconnecting(error => {
+    document.getElementById('status').classList = "badge badge-pill bg-warning";
+    document.getElementById('status').innerText = "reconnect";
+    connectionRetryLogic();
+});
+connection.onco
+connection.onreconnected(connectionId => {
+    if (isOnline()) {
+        document.getElementById('status').classList = "badge badge-pill bg-success";
+        document.getElementById('status').innerText = "online";
+    } else {
+        console.log("reconnected but not")
+        connectionRetryLogic();
+    }
+});
+var isOnline = () => connection.state === signalR.HubConnectionState.Connected && navigator.onLine;
+
+window.ononline = function () {
+    connectionRetryLogic();
+}
+
+window.onoffline = function () {
+    connectionRetryLogic();
+}
+
+start();
