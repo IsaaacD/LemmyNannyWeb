@@ -60,6 +60,7 @@ namespace LemmyWeb.Controllers
         public string? CommunityName { get; set; }
         public int WordCount { get; set; }
         public string? ThumbnailUrl { get; set; }
+        public string? CommentNumber { get; set; }
     }
     public enum ProcessedType
     {

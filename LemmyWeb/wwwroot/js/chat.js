@@ -24,6 +24,7 @@ function addListItem(processed) {
     let innerHtml = `           
   <div class="card-header" style="background-color:#43738e;color:white;padding:1em;">
       <i class="fas fa-solid fa-signs-post"></i> <a style="color:white;" href="${processed.postUrl}">${processed.title}</a>
+      <div style='float:right;'><i class="fas fa-solid fa-comments"></i><span>${processed.commentNumber}</span></div>
   </div>
   <div class="card-body" style="background-color:white;">
       <div style="text-align:right;margin-right:0.5em;" class="mr-1" title="${new Date(processed.createdDate)}"> ${createdDate}</div> 
