@@ -3,28 +3,49 @@
 @{
     ViewData["Title"] = "Nanny Feed";
 }
-<div class="" >
      <h1 style="text-align:center;">Nanny Feed</h1>
-    <img src="~/LemmyNannyLogo.png" style="display:block;margin:auto;width:20em;" alt="LemmyNanny Logo" width="50%" />
-    <div class="container">
+<div class="container" >
+    <div class="row">
+        <div class="col-6">
+                <img src="~/LemmyNannyLogo.png" style="float:left;display:block;margin:auto;width:20em;" alt="LemmyNanny Logo" width="50%" />
+        </div>
+        <div class="col-6">
+            <div clas="mt-4" style="margin-top:5em; text-align:right;">
+             <button type="button" class="btn badge badge-pill bg-danger" id="status">reconnect</button>
+                <div class="mt-1">
+                    <input type="button" id="btnPause" class="btn btn-primary" value="Pause feed" style="display:none;" /> 
+                    <div class="form-check form-switch" style="text-align:right;">
+                      <input class="form-check-input" type="checkbox" style="float:right;" role="switch" id="stayCurrent">
+                      <label class="form-check-label" for="stayCurrent" style="float:right;margin-right:3em;">Stay Current</label>
+                    </div>
+                </div>
+
+
+                <div id="numWatcher" class="mt-1 mb-1"></div>
+                <div id="lastProcessed" class="mt-1 mb-1"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
 
 </div>
 <div class="container">
     <div class="row p-1">
         <div class="col-12 mb-2 mt-1" style="text-align:center;">
-            <button type="button" class="btn badge badge-pill badge-danger" id="status">offline</button>
-            <div class="mt-1">
-                <input type="button" id="btnPause" class="btn btn-primary" value="Pause feed" />
+            <div class="col-4"></div>
+            <div class="col-2">
+               
             </div>
-
-
-            <div id="numWatcher" class="mt-1 mb-1"></div>
-            <div id="lastProcessed" class="mt-1 mb-1"></div>
+            <div class="col-4"></div>
         </div>
 
-        <div class="col-12" id="msgList" style="">
+        <div class="col-12" id="msgList" class="mb-4" style="display: block ruby;overflow: scroll;height:150px;">
 
+        </div>
+        <div class="col-12 mt-2" style="min-height:850px;">
+            <div id="focused"></div>
         </div>
     </div>
 </div>
