@@ -26,7 +26,7 @@ function addListItem(processed) {
       <i class="fas fa-solid fa-signs-post"></i> <a style="color:white;" href="${processed.postUrl}">${processed.title}</a>
   </div>
   <div class="card-body" style="background-color:white;">
-      <div style="text-align:right;margin-right:0.5em;" class="mr-1"> ${createdDate}</div> 
+      <div style="text-align:right;margin-right:0.5em;" class="mr-1" title="${new Date(processed.createdDate)}"> ${createdDate}</div> 
             <div style="padding:0.2em;background-color:white"> <img src="${processed.avatarUrl || 'Lemmy_logo.svg.png'}" style="width:70px"/> 
             <strong>${processed.username} ${type}: </strong>
             <div style="padding:0.5em; margin-bottom:1em;">
