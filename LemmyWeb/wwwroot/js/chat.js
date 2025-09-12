@@ -143,6 +143,10 @@ async function start() {
         retryTimeout = setTimeout(connectionRetryLogic, 1000);
     }
 };
+
+document.getElementById('status').addEventListener('click', function (e) {
+    start();
+});
 function connectionRetryLogic() {
     if (isOnline())
         return;
