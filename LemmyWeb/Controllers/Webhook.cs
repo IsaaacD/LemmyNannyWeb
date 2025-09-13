@@ -10,7 +10,7 @@ namespace LemmyWeb.Controllers
     public class Webhook : Controller
     {
         public static List<Processed> Processeds = [];
-        public static StartUpStats StartUpStats = new();
+        public static LemmNannyStats LemmNannyCurrentStats = new();
 
         private readonly IHubContext<ProcessedHub> _hubContext;
         private readonly string _secretKey;
@@ -35,7 +35,24 @@ namespace LemmyWeb.Controllers
                     value.Content = Markdown.ToHtml(value.Content ?? "");
                     value.Reason = Markdown.ToHtml(value.Reason ?? "");
                     await _hubContext.Clients.All.SendAsync("ReceiveProcessed", value);
-                    StartUpStats.LastSeen = DateTime.UtcNow;
+                    LemmNannyCurrentStats.LastSeen = DateTime.UtcNow;
+                    switch (value.ProcessedType)
+                    {
+                        case ProcessedType.Comment:
+                            if (value.IsReported)
+                            {
+                                LemmNannyCurrentStats.CommentsFlagged += 1;
+                            }
+                            LemmNannyCurrentStats.CommentsProcessed += 1;
+                            break;
+                        case ProcessedType.Post:
+                            if (value.IsReported)
+                            {
+                                LemmNannyCurrentStats.PostsFlagged += 1;
+                            }
+                            LemmNannyCurrentStats.PostsProcessed += 1;
+                            break;
+                    }
                 }
             }
 
@@ -44,11 +61,11 @@ namespace LemmyWeb.Controllers
 
         [Route("startup")]
         [HttpPost]
-        public void PostStartup([FromBody] StartUpStats stats)
+        public void PostStartup([FromBody] LemmNannyStats stats)
         {
-            StartUpStats = stats;
-            StartUpStats.IsSet = true;
-            StartUpStats.LastSeen = DateTime.UtcNow;
+            LemmNannyCurrentStats = stats;
+            LemmNannyCurrentStats.IsSet = true;
+            LemmNannyCurrentStats.LastSeen = DateTime.UtcNow;
         }
     }
 }
