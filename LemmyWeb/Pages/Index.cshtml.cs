@@ -1,20 +1,11 @@
-using LemmyWeb.Controllers;
-using LemmyWeb.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.SignalR;
 
 namespace LemmyWeb.Pages
 {
-    public class IndexModel : PageModel
+    public class AboutModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
-        public IndexModel(ILogger<IndexModel> logger)
-        {
-            _logger = logger;
-        }
-
-        public async Task OnGet()
+        public void OnGet()
         {
         }
     }
