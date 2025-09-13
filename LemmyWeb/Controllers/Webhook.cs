@@ -61,6 +61,8 @@ namespace LemmyWeb.Controllers
         public int WordCount { get; set; }
         public string? ThumbnailUrl { get; set; }
         public string? CommentNumber { get; set; }
+        public bool Failed { get; set; }
+        public bool ViewedImages { get; set; }
     }
     public enum ProcessedType
     {
