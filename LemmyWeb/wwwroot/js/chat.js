@@ -36,11 +36,11 @@ function changedFocus(processed) {
             <strong>${processed.username} ${type}: </strong>
             <div style="padding:0.5em; margin-bottom:1em;">
                 <span class="fas fa-quote-left fa-lg text-warning me-2"></span>
-                ${processed.content}`;
+                ${processed.content ?? `<a href="${processed.postUrl}">${processed.title}</a>` }`;
 
-    if (processed.thumbnailUrl) {
-        innerHtml += `<img src=${processed.thumbnailUrl}/>`
-    }
+    //if (processed.thumbnailUrl) {
+    //    innerHtml += `<img src=${processed.thumbnailUrl}/>`
+    //}
     let processedOn = new Date(processed.processedOn).toString();
     processedOn = processedOn.split('GMT')[0];
     innerHtml += `
