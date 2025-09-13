@@ -47,7 +47,7 @@ function changedFocus(processed) {
                 <span class="fas fa-quote-right fa-lg text-warning me-2" style="float:right;"></span>
             </div>                     
     </div>        
-    <div class="p-2" style="background-color:white;border: 4px dashed ${processed.isReported ? 'darksalmon' : processed.reason.indexOf('Failed to check') > -1 ? '#ffe29b' : 'aliceblue'};"><strong>LemmyNanny Reported?</strong> ${processed.reason}</div>
+    <div class="p-2" style="background-color:white;border: 4px dashed ${processed.isReported ? 'darksalmon' : processed.failed ? '#ffe29b' : 'aliceblue'};"><strong>LemmyNanny Reported?${processed.viewedImages ? '<i class="fas fa-solid fa-images"></i>' : ''}</strong> ${processed.reason}</div>
         <div style="float:left;color:lightgrey;" data-toggle="tooltip" data-placement="top" title="${processedOn}">${processed.extraInfo}</div>`;
 
     if (processed.processedType === 1) {
@@ -85,7 +85,7 @@ function addListItem(processed) {
     li.style.opacity = 0;
     document.getElementById("msgList").prepend(li);
     time = 0;
-    li.innerHTML = `<div style="background-color:#f2eeee">${new Date(processed.processedOn).toString().split(' ')[4].split(':').slice(0, 2).join(':').toString()}</div><div style="overflow: hidden;text-overflow: ellipsis;;text-align:center;border: 4px dashed ${processed.isReported ? 'darksalmon' : processed.reason.indexOf('Failed to check') > -1 ? '#ffe29b' : 'aliceblue'};margin-right:0.1em;">
+    li.innerHTML = `<div style="background-color:#f2eeee">${new Date(processed.processedOn).toString().split(' ')[4].split(':').slice(0, 2).join(':').toString()}</div><div style="overflow: hidden;text-overflow: ellipsis;;text-align:center;border: 4px dashed ${processed.isReported ? 'darksalmon' : processed.failed ? '#ffe29b' : 'aliceblue'};margin-right:0.1em;">
         <div class="badge bg-secondary" style="overflow:hidden;"><i class="fas fa-solid fa-group-arrows-rotate"></i> <span>${processed.communityName}</span></div>
         <div style="text-align:center;">
             <div style="">
