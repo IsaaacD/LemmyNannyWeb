@@ -7,7 +7,7 @@ namespace LemmyWeb
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Services.AddApplicationInsightsTelemetry();
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddSignalR();
