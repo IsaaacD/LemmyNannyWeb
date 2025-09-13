@@ -24,7 +24,6 @@ namespace LemmyWeb.Controllers
         [HttpPost]
         public async Task<string> PostAsync([FromBody] Processed value)
         {
-            //ar val = JsonSerializer.Deserialize<Processed>(value);
             if (Request.Headers.ContainsKey("ClientSecret"))
             {
                 if (Request.Headers["ClientSecret"].ToString() == _secretKey)
@@ -63,9 +62,15 @@ namespace LemmyWeb.Controllers
         [HttpPost]
         public void PostStartup([FromBody] LemmNannyStats stats)
         {
-            LemmNannyCurrentStats = stats;
-            LemmNannyCurrentStats.IsSet = true;
-            LemmNannyCurrentStats.LastSeen = DateTime.UtcNow;
+            if (Request.Headers.ContainsKey("ClientSecret"))
+            {
+                if (Request.Headers["ClientSecret"].ToString() == _secretKey)
+                {
+                    LemmNannyCurrentStats = stats;
+                    LemmNannyCurrentStats.IsSet = true;
+                    LemmNannyCurrentStats.LastSeen = DateTime.UtcNow;
+                }
+            }
         }
     }
 }
