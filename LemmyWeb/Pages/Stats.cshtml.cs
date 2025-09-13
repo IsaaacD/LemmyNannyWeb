@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LemmyWeb.Pages
 {
-    public class AboutModel : PageModel
+    public class StatsModel : PageModel
     {
         public void OnGet()
         {
-           
         }
     }
 }
