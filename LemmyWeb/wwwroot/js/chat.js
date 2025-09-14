@@ -1,5 +1,20 @@
 ﻿"use strict";
 
+HTMLImageElement.prototype.isLoaded = function () {
+
+    // See if "naturalWidth" and "naturalHeight" properties are available.
+    if (typeof this.naturalWidth == 'number' && typeof this.naturalHeight == 'number')
+        return !(this.naturalWidth == 0 && this.naturalHeight == 0);
+
+    // See if "complete" property is available.
+    else if (typeof this.complete == 'boolean')
+        return this.complete;
+
+    // Fallback behavior: return TRUE.
+    else
+        return true;
+
+};
 function changedFocus(processed) {
     var li = document.getElementById("focused");
     li.classList = 'card mb-4';
@@ -38,9 +53,9 @@ function changedFocus(processed) {
                 <span class="fas fa-quote-left fa-lg text-warning me-2"></span>
                 ${processed.content ?? `<a href="${processed.postUrl}">${processed.title}</a>` }`;
 
-    //if (processed.thumbnailUrl) {
-    //    innerHtml += `<img src=${processed.thumbnailUrl}/>`
-    //}
+    if (processed.thumbnailUrl) {
+        innerHtml += `<img id="thumbImg" src=${processed.thumbnailUrl}/>`
+    }
     let processedOn = new Date(processed.processedOn).toString();
     processedOn = processedOn.split('GMT')[0];
     innerHtml += `
@@ -63,7 +78,10 @@ function changedFocus(processed) {
     
     setTimeout(() => {
         li.style.opacity = '1';
-
+        let thumbImg = document.getElementById('thumbImg');
+        if (thumbImg && !thumbImg.isLoaded()) {
+            document.getElementById('thumbImg').remove();
+        }
     }, 1);
 }
 
