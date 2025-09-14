@@ -15,5 +15,7 @@
         public int PostsFlagged { get; set; }
         public int CommentsProcessed { get; set; }
         public int CommentsFlagged { get; set; }
+
+        public TimeSpan Elapsed => StartTime - LastSeen;
     }
 }
