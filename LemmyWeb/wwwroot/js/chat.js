@@ -54,7 +54,17 @@ function changedFocus(processed) {
                 ${processed.content ?? `<a href="${processed.postUrl}">${processed.title}</a>` }`;
 
     if (processed.thumbnailUrl) {
-        innerHtml += `<img id="thumbImg" src=${processed.thumbnailUrl}/>`
+        innerHtml += `<a class="d-inline-block" href="${processed.thumbnailUrl}">
+                <picture>
+                    <source srcset="${processed.thumbnailUrl}?format=webp"
+                        type="image/webp">
+                    <source srcset="${processed.thumbnailUrl}">
+                    <source srcset="${processed.thumbnailUrl}?format=jpg"
+                        type="image/jpeg"><img class="overflow-hidden pictrs-image img-fluid img-expanded slight-radius"
+                        src="${processed.thumbnailUrl}" alt="" title=""
+                        loading="lazy">
+                </picture>
+            </a>`
     }
     let processedOn = new Date(processed.processedOn).toString();
     processedOn = processedOn.split('GMT')[0];
@@ -78,10 +88,6 @@ function changedFocus(processed) {
     
     setTimeout(() => {
         li.style.opacity = '1';
-        let thumbImg = document.getElementById('thumbImg');
-        if (thumbImg && !thumbImg.isLoaded()) {
-            document.getElementById('thumbImg').remove();
-        }
     }, 1);
 }
 
