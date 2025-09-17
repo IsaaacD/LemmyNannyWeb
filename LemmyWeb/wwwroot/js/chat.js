@@ -318,36 +318,43 @@ let touchstartY;
 let touchendX;
 let touchendY;
 
-document.getElementById("focused").addEventListener('touchstart', function (event) {
-    touchstartX = event.changedTouches[0].screenX;
-    touchstartY = event.changedTouches[0].screenY;
-}, false);
+//document.getElementById("focused").addEventListener('touchstart', function (event) {
+//    touchstartX = event.changedTouches[0].screenX;
+//    touchstartY = event.changedTouches[0].screenY;
+//}, false);
 
-document.getElementById("focused").addEventListener('touchend', function (event) {
-    touchendX = event.changedTouches[0].screenX;
-    touchendY = event.changedTouches[0].screenY;
-    handleGesture();
-}, false);
+//document.getElementById("focused").addEventListener('touchend', function (event) {
+//    touchendX = event.changedTouches[0].screenX;
+//    touchendY = event.changedTouches[0].screenY;
+//    handleGesture();
+//}, false);
 
 
 function handleGesture() {
+    let differenceX = touchendX - touchstartX; 
+
     if (touchendX < touchstartX) {
-        console.log('Swiped Left');
-        if (focusProcessed) {
-            let next = focusProcessed.imageCount + 1;
-            let nextElem = document.getElementById(next);
-            if(nextElem)
-                nextElem.dispatchEvent(new Event('click'));
+        if (Math.abs(differenceX) > 50) {
+            console.log('Swiped Left');
+            if (focusProcessed) {
+                let next = focusProcessed.imageCount + 1;
+                let nextElem = document.getElementById(next);
+                if (nextElem)
+                    nextElem.dispatchEvent(new Event('click'));
+            }
         }
+
     }
 
     if (touchendX > touchstartX) {
-        console.log('Swiped Right');
-        if (focusProcessed) {
-            let next = focusProcessed.imageCount - 1;
-            let nextElem = document.getElementById(next);
-            if (nextElem)
-                nextElem.dispatchEvent(new Event('click'));
+        if (Math.abs(differenceX) > 50) {
+            console.log('Swiped Right');
+            if (focusProcessed) {
+                let next = focusProcessed.imageCount - 1;
+                let nextElem = document.getElementById(next);
+                if (nextElem)
+                    nextElem.dispatchEvent(new Event('click'));
+            }
         }
     }
 
