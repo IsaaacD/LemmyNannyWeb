@@ -179,7 +179,9 @@ connection.on("ReceiveProcessed", function (processed) {
                 a[i].style.backgroundColor = 'white';
             }
             changedFocus(processed);
-            document.getElementById(processed.id).style.backgroundColor = '#fdd063';
+            let newSelect = document.getElementById(processed.imageCount);
+            newSelect.style.backgroundColor = '#fdd063';
+            scrollTo(newSelect);
         }
         let list = document.getElementById("msgList");
         if (list.children.length > 50) {
@@ -368,5 +370,47 @@ function handleGesture() {
 
     if (touchendY === touchstartY) {
         console.log('Tap');
+    }
+}
+
+document.getElementById("leftArrow").addEventListener('click', (evt) => {
+    if (focusProcessed) {
+        let next = focusProcessed.imageCount + 1;
+        let nextElem = document.getElementById(next);
+        if (nextElem) {
+            nextElem.dispatchEvent(new Event('click'));
+            scrollTo(nextElem);
+        }
+
+    }
+});
+
+document.getElementById("rightArrow").addEventListener('click', (evt) => {
+    if (focusProcessed) {
+        let next = focusProcessed.imageCount - 1;
+        let nextElem = document.getElementById(next);
+        if (nextElem) {
+            nextElem.dispatchEvent(new Event('click'));
+            scrollTo(nextElem);
+        }
+
+    }
+});
+
+function scrollTo(el) {
+    const elRight = el.offsetLeft + el.offsetWidth;
+    const elLeft = el.offsetLeft;
+
+    const elParentRight = el.parentNode.offsetLeft + el.parentNode.offsetWidth;
+    const elParentLeft = el.parentNode.offsetLeft;
+
+    // check if right side of the element is not in view
+    if (elRight > elParentRight + el.parentNode.scrollLeft) {
+        el.parentNode.scrollLeft = elRight - elParentRight;
+    }
+
+    // check if left side of the element is not in view
+    else if (elLeft < elParentLeft + el.parentNode.scrollLeft) {
+        el.parentNode.scrollLeft = elLeft - elParentLeft;
     }
 }
