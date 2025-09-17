@@ -47,7 +47,17 @@ function changedFocus(processed) {
         <div style="text-align:right; margin-right:0.5em"><strong>${processed.processedType === 1 ? 'Comment' : 'Post'} #${processed.id}</strong></div>
       <div style="text-align:right;margin-right:0.5em;" class="mr-1" title="${new Date(processed.createdDate)}"> ${createdDate}</div> 
 
-            <div style="padding:0.2em;background-color:white"> <img src="${processed.avatarUrl || 'Lemmy_logo.svg.png'}" style="width:70px"/> 
+            <div style="padding:0.2em;background-color:white">
+            <picture>
+    <source
+        srcset="${processed.avatarUrl || 'Lemmy_logo.svg.png'}?format=webp&amp;thumbnail=96"
+        type="image/webp">
+    <source srcset="${processed.avatarUrl || 'Lemmy_logo.svg.png'}">
+    <source
+        srcset="${processed.avatarUrl || 'Lemmy_logo.svg.png'}?format=jpg&amp;thumbnail=96"
+        type="image/jpeg"><img style="width:4em" class="overflow-hidden pictrs-image object-fit-cover img-icon me-1"
+        src="${processed.avatarUrl || 'Lemmy_logo.svg.png'}" alt="" title="${processed.username} profile image" loading="lazy">
+</picture>
             <strong>${processed.username} ${type}: </strong>
             <div style="padding:0.5em; margin-bottom:1em;">
                 <span class="fas fa-quote-left fa-lg text-warning me-2"></span>
