@@ -93,16 +93,10 @@ namespace LemmyWeb.Controllers
                 }
             }
 
-            var localStats = new LemmNannyStats();
-            if (!_memoryCache.TryGetValue(STATS_KEY, out localStats))
-            {
-                localStats = stats;
-            }
+            stats!.IsSet = true;
+            stats.LastSeen = DateTime.UtcNow;
 
-            localStats!.IsSet = true;
-            localStats.LastSeen = DateTime.UtcNow;
-
-            _memoryCache.Set(STATS_KEY, localStats);
+            _memoryCache.Set(STATS_KEY, stats);
 
             return await Task.FromResult(string.Empty);
 
