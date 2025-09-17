@@ -1,5 +1,5 @@
 ﻿"use strict";
-
+let previewCounter = 0;
 HTMLImageElement.prototype.isLoaded = function () {
 
     // See if "naturalWidth" and "naturalHeight" properties are available.
@@ -15,7 +15,10 @@ HTMLImageElement.prototype.isLoaded = function () {
         return true;
 
 };
+
+let focusProcessed = null;
 function changedFocus(processed) {
+    focusProcessed = processed;
     var li = document.getElementById("focused");
     li.classList = 'card mb-4';
     li.style.overflowX = "scroll";
@@ -114,7 +117,8 @@ function addListItem(processed) {
     li.style.borderRadius = '10px';
     li.style.backgroundColor = 'white';
     li.style.textAlign = 'center';
-    li.id = processed.id;
+    processed.imageCount = previewCounter++;
+    li.id = processed.imageCount;
     li.style.transition = 'opacity 1.1s ease-in';
     li.style.opacity = 0;
     document.getElementById("msgList").prepend(li);
@@ -186,15 +190,14 @@ connection.on("ReceiveProcessed", function (processed) {
 });
 
 connection.on("ReceivedInitial", function (processeds) {
-    console.log("proceeds");
-    var a = document.getElementsByClassName('listItem');
+    document.getElementById("msgList").innerHTML = '';
 
     for (var i = 0; i < processeds.length; i++) {
         addListItem(processeds[i]);
     }
     let showProc = processeds[processeds.length - 1];
     changedFocus(showProc);
-    document.getElementById(showProc.id).style.backgroundColor = '#fdd063';
+    document.getElementById(showProc.imageCount).style.backgroundColor = '#fdd063';
 
 });
 
@@ -310,3 +313,53 @@ window.onoffline = function () {
 }
 
 start();
+let touchstartX;
+let touchstartY;
+let touchendX;
+let touchendY;
+
+document.getElementById("focused").addEventListener('touchstart', function (event) {
+    touchstartX = event.changedTouches[0].screenX;
+    touchstartY = event.changedTouches[0].screenY;
+}, false);
+
+document.getElementById("focused").addEventListener('touchend', function (event) {
+    touchendX = event.changedTouches[0].screenX;
+    touchendY = event.changedTouches[0].screenY;
+    handleGesture();
+}, false);
+
+
+function handleGesture() {
+    if (touchendX < touchstartX) {
+        console.log('Swiped Left');
+        if (focusProcessed) {
+            let next = focusProcessed.imageCount + 1;
+            let nextElem = document.getElementById(next);
+            if(nextElem)
+                nextElem.dispatchEvent(new Event('click'));
+        }
+    }
+
+    if (touchendX > touchstartX) {
+        console.log('Swiped Right');
+        if (focusProcessed) {
+            let next = focusProcessed.imageCount - 1;
+            let nextElem = document.getElementById(next);
+            if (nextElem)
+                nextElem.dispatchEvent(new Event('click'));
+        }
+    }
+
+    if (touchendY < touchstartY) {
+        console.log('Swiped Up');
+    }
+
+    if (touchendY > touchstartY) {
+        console.log('Swiped Down');
+    }
+
+    if (touchendY === touchstartY) {
+        console.log('Tap');
+    }
+}
