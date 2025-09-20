@@ -28,29 +28,29 @@ namespace LemmyWeb.Controllers
 
         [Route("post")]
         [HttpPost]
-        public void PostBodyFromLemmy([FromBody] RawData data)
+        public void PostBodyFromLemmy([FromBody] JsonObject data)
         {
-            var memoryProcessed = new List<RawData>();
+            var memoryProcessed = new List<JsonObject>();
             // Look for cache key.
             if (!_memoryCache.TryGetValue(POSTS_FROM_LEMMY, out memoryProcessed))
             {
-                memoryProcessed = new List<RawData>();
+                memoryProcessed = new List<JsonObject>();
             }
 
             memoryProcessed!.Add(data);
-            _memoryCache.Set(COMMENTS_FROM_LEMMY, memoryProcessed);
+            _memoryCache.Set(POSTS_FROM_LEMMY, memoryProcessed);
 
         }
 
         [Route("comment")]
         [HttpPost]
-        public void CommentBodyFromLemmy([FromBody] RawData data)
+        public void CommentBodyFromLemmy([FromBody] JsonObject data)
         {
-            var memoryProcessed = new List<RawData>();
+            var memoryProcessed = new List<JsonObject>();
             // Look for cache key.
             if (!_memoryCache.TryGetValue(COMMENTS_FROM_LEMMY, out memoryProcessed))
             {
-                memoryProcessed = new List<RawData>();
+                memoryProcessed = new List<JsonObject>();
             }
 
             memoryProcessed!.Add(data);
