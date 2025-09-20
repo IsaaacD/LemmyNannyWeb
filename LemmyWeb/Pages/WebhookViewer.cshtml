@@ -9,7 +9,7 @@
             @foreach (var item in Model.Posts)
             {
                 <div>
-                    @item.ToString()
+                    @(item?.ToString() ?? "Null")
                 </div>
             }
         </div>
@@ -18,7 +18,7 @@
             @foreach (var item in Model.Comments)
             {
                 <div>
-                    @item.ToString()
+                    @(item?.ToString() ?? "Null")
                 </div>
             }
         </div>
