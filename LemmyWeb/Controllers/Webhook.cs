@@ -4,13 +4,16 @@ using Markdig;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
+using System.Text.Json.Nodes;
 
 namespace LemmyWeb.Controllers
 {
 
     public class Webhook : Controller
     {
-        public static string PROCESSED_KEy = "Processed";
+        public static string PROCESSED_KEY = "Processed";
+        public static string COMMENTS_FROM_LEMMY = "Comments_From_Lemmy";
+        public static string POSTS_FROM_LEMMY = "Posts_From_Lemmy";
         public static string STATS_KEY = "Stats";
 
         private readonly IHubContext<ProcessedHub> _hubContext;
@@ -22,6 +25,63 @@ namespace LemmyWeb.Controllers
             _secretKey = config["SecretKey"] ?? throw new Exception("SecretKey not set");
             _memoryCache = memoryCache;
         }
+
+        [Route("post")]
+        [HttpPost]
+        public void PostBodyFromLemmy([FromBody] RawData data)
+        {
+            var memoryProcessed = new List<RawData>();
+            // Look for cache key.
+            if (!_memoryCache.TryGetValue(POSTS_FROM_LEMMY, out memoryProcessed))
+            {
+                memoryProcessed = new List<RawData>();
+            }
+
+            memoryProcessed!.Add(data);
+            _memoryCache.Set(COMMENTS_FROM_LEMMY, memoryProcessed);
+
+        }
+
+        [Route("comment")]
+        [HttpPost]
+        public void CommentBodyFromLemmy([FromBody] RawData data)
+        {
+            var memoryProcessed = new List<RawData>();
+            // Look for cache key.
+            if (!_memoryCache.TryGetValue(COMMENTS_FROM_LEMMY, out memoryProcessed))
+            {
+                memoryProcessed = new List<RawData>();
+            }
+
+            memoryProcessed!.Add(data);
+            _memoryCache.Set(COMMENTS_FROM_LEMMY, memoryProcessed);
+        }
+
+
+        public class RawData
+        {
+            public DateTime Timestamp { get; }
+            public string? Operation { get; }
+            public string Schema { get; }
+            public string Table { get; }
+
+            // This assumes you have a generic type TData defined elsewhere.
+            // Replace 'object' with the actual type based on your 'TData'.
+            public JsonObject Data { get; }
+
+            public JsonObject? Previous { get; } // Using nullable object? to match PHP null
+
+            public RawData(DateTime timestamp, string operation, string schema, string table, JsonObject data, JsonObject? previous)
+            {
+                Timestamp = timestamp;
+                Operation = operation;
+                Schema = schema;
+                Table = table;
+                Data = data;
+                Previous = previous;
+            }
+        }
+
 
         [Route("webhook")]
         [HttpPost]
@@ -37,7 +97,7 @@ namespace LemmyWeb.Controllers
 
             var memoryProcessed = new List<Processed>();
             // Look for cache key.
-            if (!_memoryCache.TryGetValue(PROCESSED_KEy, out memoryProcessed))
+            if (!_memoryCache.TryGetValue(PROCESSED_KEY, out memoryProcessed))
             {
                 memoryProcessed = new List<Processed>();
             }
@@ -75,7 +135,7 @@ namespace LemmyWeb.Controllers
             }
 
             _memoryCache.Set(STATS_KEY, stats);
-            _memoryCache.Set(PROCESSED_KEy, memoryProcessed);
+            _memoryCache.Set(PROCESSED_KEY, memoryProcessed);
 
 
             return await Task.FromResult(string.Empty);

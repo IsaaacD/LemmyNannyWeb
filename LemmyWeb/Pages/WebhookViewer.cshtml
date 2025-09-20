@@ -1,0 +1,26 @@
+﻿@page
+@model LemmyWeb.Pages.WebhookViewerModel
+@{
+}
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h2>Posts feed</h2>
+            @foreach (var item in Model.Posts)
+            {
+                <div>
+                    @item.Data.ToString()
+                </div>
+            }
+        </div>
+        <div class="col-6">
+            <h2>Comments feed</h2>
+            @foreach (var item in Model.Comments)
+            {
+                <div>
+                    @item.Data.ToString()
+                </div>
+            }
+        </div>
+    </div>
+</div>
