@@ -51,9 +51,9 @@ namespace LemmyWeb.Controllers
 
         [Route("comment")]
         [HttpPost]
-        public async Task CommentBodyFromLemmy(Dictionary<string, object> keyValuePairs)
+        public async Task CommentBodyFromLemmy(dynamic data)
         {
-            //var converted = JsonSerializer.Serialize(data);
+            var converted = JsonSerializer.Serialize(data);
             var memoryProcessed = new List<string>();
             // Look for cache key.
             if (!_memoryCache.TryGetValue(COMMENTS_FROM_LEMMY, out memoryProcessed))
@@ -62,21 +62,21 @@ namespace LemmyWeb.Controllers
             }
 
 
-            foreach (var name in keyValuePairs)
-            {
-                memoryProcessed!.Add($"{name.Key}={JsonSerializer.Serialize(name.Value)}");
-            }
+            //foreach (var name in keyValuePairs)
+            //{
+            //    memoryProcessed!.Add($"{name.Key}={JsonSerializer.Serialize(name.Value)}");
+            //}
 
 
-            string? postData = null;
-            using (var reader = new StreamReader(HttpContext.Request.Body))
-            {
-                postData = await reader.ReadToEndAsync();
+            //string? postData = null;
+            //using (var reader = new StreamReader(HttpContext.Request.Body))
+            //{
+            //    postData = await reader.ReadToEndAsync();
 
-            }
+            //}
 
 
-            memoryProcessed!.Add(postData);
+            memoryProcessed!.Add(converted);
             _memoryCache.Set(COMMENTS_FROM_LEMMY, memoryProcessed);
         }
 
