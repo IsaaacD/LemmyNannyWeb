@@ -29,8 +29,9 @@ namespace LemmyWeb.Controllers
 
         [Route("post")]
         [HttpPost]
-        public async Task PostBodyFromLemmy()
+        public async Task PostBodyFromLemmy(object? data)
         {
+            var converted = JsonSerializer.Serialize(data);
             string? postData = null;
             using (var reader = new StreamReader(HttpContext.Request.Body))
             {
@@ -45,6 +46,7 @@ namespace LemmyWeb.Controllers
             }
 
             memoryProcessed!.Add(postData);
+            memoryProcessed!.Add(converted);
             _memoryCache.Set(POSTS_FROM_LEMMY, memoryProcessed);
 
         }
