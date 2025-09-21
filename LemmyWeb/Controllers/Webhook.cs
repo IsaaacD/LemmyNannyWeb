@@ -51,7 +51,7 @@ namespace LemmyWeb.Controllers
 
         [Route("comment")]
         [HttpPost]
-        public async Task CommentBodyFromLemmy([FromBody] Dictionary<string, object> keyValuePairs)
+        public async Task CommentBodyFromLemmy(Dictionary<string, object> keyValuePairs)
         {
             //var converted = JsonSerializer.Serialize(data);
             var memoryProcessed = new List<string>();
