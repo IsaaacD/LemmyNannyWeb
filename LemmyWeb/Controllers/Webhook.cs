@@ -51,7 +51,7 @@ namespace LemmyWeb.Controllers
 
         [Route("comment")]
         [HttpPost]
-        public async Task CommentBodyFromLemmy(string data)
+        public async Task CommentBodyFromLemmy(object? data)
         {
             var converted = JsonSerializer.Serialize(data);
             var memoryProcessed = new List<string>();
