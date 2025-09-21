@@ -27,11 +27,8 @@ namespace LemmyWeb.Controllers
         }
         [Route("post")]
         [HttpPost]
-        public async Task PostBodyFromLemmy(object? data)
+        public async Task PostBodyFromLemmy()
         {
-
-            var converted = JsonSerializer.Serialize(data);
-
             string? postData = null;
 
             using (var reader = new StreamReader(HttpContext.Request.Body))
@@ -42,16 +39,12 @@ namespace LemmyWeb.Controllers
             var memoryProcessed = new List<string>();
 
             // Look for cache key.
-
             if (!_memoryCache.TryGetValue(POSTS_FROM_LEMMY, out memoryProcessed))
             {
-
                 memoryProcessed = new List<string>();
-
             }
 
             memoryProcessed!.Add(postData);
-            memoryProcessed!.Add(converted);
 
             _memoryCache.Set(POSTS_FROM_LEMMY, memoryProcessed);
             await _botHub.Clients.All.SendAsync(POSTS_FROM_LEMMY, postData);
@@ -59,10 +52,8 @@ namespace LemmyWeb.Controllers
 
         [Route("comment")]
         [HttpPost]
-        public async Task CommentBodyFromLemmy(object? comment)
+        public async Task CommentBodyFromLemmy()
         {
-            var converted = JsonSerializer.Serialize(comment);
-
             var memoryProcessed = new List<string>();
 
             // Look for cache key.
@@ -77,7 +68,6 @@ namespace LemmyWeb.Controllers
                 postData = await reader.ReadToEndAsync();
             }
             memoryProcessed!.Add(postData);
-            memoryProcessed!.Add(converted);
 
             _memoryCache.Set(COMMENTS_FROM_LEMMY, memoryProcessed);
             await _botHub.Clients.All.SendAsync(COMMENTS_FROM_LEMMY, postData);
