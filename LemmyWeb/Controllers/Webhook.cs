@@ -29,9 +29,14 @@ namespace LemmyWeb.Controllers
 
         [Route("post")]
         [HttpPost]
-        public void PostBodyFromLemmy([FromBody] dynamic data)
+        public void PostBodyFromLemmy()
         {
-            var converted = JsonSerializer.Serialize(data);
+            string? postData = null;
+            using (var reader = new StreamReader(HttpContext.Request.Body))
+            {
+                postData = reader.ReadToEnd();
+
+            }
             var memoryProcessed = new List<string>();
             // Look for cache key.
             if (!_memoryCache.TryGetValue(POSTS_FROM_LEMMY, out memoryProcessed))
@@ -39,16 +44,22 @@ namespace LemmyWeb.Controllers
                 memoryProcessed = new List<string>();
             }
 
-            memoryProcessed!.Add(converted);
+            memoryProcessed!.Add(postData);
             _memoryCache.Set(POSTS_FROM_LEMMY, memoryProcessed);
 
         }
 
         [Route("comment")]
         [HttpPost]
-        public void CommentBodyFromLemmy([FromBody] dynamic data)
+        public void CommentBodyFromLemmy()
         {
-            var converted = JsonSerializer.Serialize(data);
+            string? postData = null;
+            using (var reader = new StreamReader(HttpContext.Request.Body))
+            {
+                postData = reader.ReadToEnd();
+
+            }
+            //var converted = JsonSerializer.Serialize(data);
             var memoryProcessed = new List<string>();
             // Look for cache key.
             if (!_memoryCache.TryGetValue(COMMENTS_FROM_LEMMY, out memoryProcessed))
@@ -56,7 +67,7 @@ namespace LemmyWeb.Controllers
                 memoryProcessed = new List<string>();
             }
 
-            memoryProcessed!.Add(converted);
+            memoryProcessed!.Add(postData);
             _memoryCache.Set(COMMENTS_FROM_LEMMY, memoryProcessed);
         }
 
