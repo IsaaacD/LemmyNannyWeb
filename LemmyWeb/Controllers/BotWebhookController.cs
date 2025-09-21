@@ -26,7 +26,7 @@ namespace LemmyWeb.Controllers
         }
         [Route("post")]
         [HttpPost]
-        public async Task PostBodyFromLemmy(object post)
+        public async Task PostBodyFromLemmy(object? post)
         {
             var a = JsonSerializer.Serialize(post);
             var memoryProcessed = new List<string>();
@@ -45,7 +45,7 @@ namespace LemmyWeb.Controllers
 
         [Route("comment")]
         [HttpPost]
-        public async Task CommentBodyFromLemmy(object comment)
+        public async Task CommentBodyFromLemmy(object? comment)
         {
             var a = JsonSerializer.Serialize(comment);
             var memoryProcessed = new List<string>();
