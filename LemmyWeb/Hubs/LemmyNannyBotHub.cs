@@ -22,17 +22,17 @@ namespace LemmyWeb.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            var posts = new List<Post>();
+            var posts = new List<string>();
             if (!_memoryCache.TryGetValue(BotWebhookController.POSTS_FROM_LEMMY, out posts))
             {
-                posts = new List<Post>();
+                posts = new List<string>();
             }
             await Clients.Caller.SendAsync("Initial_Posts", posts);
 
-            var comments = new List<Comment>();
+            var comments = new List<string>();
             if (!_memoryCache.TryGetValue(BotWebhookController.COMMENTS_FROM_LEMMY, out comments))
             {
-                comments = new List<Comment>();
+                comments = new List<string>();
             }
             await Clients.Caller.SendAsync("Initial_Comments", comments);
         }
