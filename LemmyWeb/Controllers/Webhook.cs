@@ -29,12 +29,12 @@ namespace LemmyWeb.Controllers
 
         [Route("post")]
         [HttpPost]
-        public void PostBodyFromLemmy()
+        public async Task PostBodyFromLemmy()
         {
             string? postData = null;
             using (var reader = new StreamReader(HttpContext.Request.Body))
             {
-                postData = reader.ReadToEnd();
+                postData = await reader.ReadToEndAsync();
 
             }
             var memoryProcessed = new List<string>();
@@ -51,12 +51,12 @@ namespace LemmyWeb.Controllers
 
         [Route("comment")]
         [HttpPost]
-        public void CommentBodyFromLemmy()
+        public async Task CommentBodyFromLemmy()
         {
             string? postData = null;
             using (var reader = new StreamReader(HttpContext.Request.Body))
             {
-                postData = reader.ReadToEnd();
+                postData = await reader.ReadToEndAsync();
 
             }
             //var converted = JsonSerializer.Serialize(data);
