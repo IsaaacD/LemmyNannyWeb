@@ -53,9 +53,9 @@ namespace LemmyWeb.Controllers
 
         [Route("comment")]
         [HttpPost]
-        public async Task CommentBodyFromLemmy(object? data)
+        public async Task CommentBodyFromLemmy(Comment? comment)
         {
-            var converted = JsonSerializer.Serialize(data);
+            var converted = JsonSerializer.Serialize(comment);
             var memoryProcessed = new List<string>();
             // Look for cache key.
             if (!_memoryCache.TryGetValue(COMMENTS_FROM_LEMMY, out memoryProcessed))
@@ -106,6 +106,40 @@ namespace LemmyWeb.Controllers
                 Previous = previous;
             }
         }
+
+
+
+        public class Comment
+        {
+            public Timestamp timestamp { get; set; }
+            public string operation { get; set; }
+            public string schema { get; set; }
+            public string table { get; set; }
+            public CommentData data { get; set; }
+            public object previous { get; set; }
+        }
+
+        public class Timestamp
+        {
+            public string date { get; set; }
+            public int timezone_type { get; set; }
+            public string timezone { get; set; }
+        }
+
+        public class CommentData
+        {
+            public int id { get; set; }
+            public int creatorId { get; set; }
+            public int postId { get; set; }
+            public string content { get; set; }
+            public bool removed { get; set; }
+            public bool deleted { get; set; }
+            public string apId { get; set; }
+            public bool local { get; set; }
+            public bool distinguished { get; set; }
+            public string path { get; set; }
+        }
+
 
 
         [Route("webhook")]
