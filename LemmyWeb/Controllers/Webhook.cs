@@ -68,14 +68,14 @@ namespace LemmyWeb.Controllers
             //}
 
 
-            //string? postData = null;
-            //using (var reader = new StreamReader(HttpContext.Request.Body))
-            //{
-            //    postData = await reader.ReadToEndAsync();
+            string? postData = null;
+            using (var reader = new StreamReader(HttpContext.Request.Body))
+            {
+                postData = await reader.ReadToEndAsync();
 
-            //}
+            }
 
-
+            memoryProcessed!.Add(postData);
             memoryProcessed!.Add(converted);
             _memoryCache.Set(COMMENTS_FROM_LEMMY, memoryProcessed);
         }

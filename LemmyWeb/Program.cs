@@ -1,4 +1,5 @@
 using LemmyWeb.Hubs;
+using Microsoft.AspNetCore.HttpLogging;
 
 namespace LemmyWeb
 {
@@ -13,6 +14,11 @@ namespace LemmyWeb
             builder.Services.AddSignalR();
             builder.Services.AddControllers();
             builder.Services.AddMemoryCache();
+
+            builder.Services.AddHttpLogging(o => { 
+                o.LoggingFields = HttpLoggingFields.All;
+                o.RequestBodyLogLimit = 4096;
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -27,7 +33,7 @@ namespace LemmyWeb
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseHttpLogging();
             app.UseAuthorization();
             app.MapControllers();
             app.MapRazorPages();
