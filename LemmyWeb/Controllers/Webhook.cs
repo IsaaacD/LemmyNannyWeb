@@ -4,6 +4,7 @@ using Markdig;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace LemmyWeb.Controllers
@@ -28,32 +29,34 @@ namespace LemmyWeb.Controllers
 
         [Route("post")]
         [HttpPost]
-        public void PostBodyFromLemmy([FromBody] JsonObject data)
+        public void PostBodyFromLemmy([FromBody] dynamic data)
         {
-            var memoryProcessed = new List<JsonObject>();
+            var converted = JsonSerializer.Serialize(data);
+            var memoryProcessed = new List<string>();
             // Look for cache key.
             if (!_memoryCache.TryGetValue(POSTS_FROM_LEMMY, out memoryProcessed))
             {
-                memoryProcessed = new List<JsonObject>();
+                memoryProcessed = new List<string>();
             }
 
-            memoryProcessed!.Add(data);
+            memoryProcessed!.Add(converted);
             _memoryCache.Set(POSTS_FROM_LEMMY, memoryProcessed);
 
         }
 
         [Route("comment")]
         [HttpPost]
-        public void CommentBodyFromLemmy([FromBody] JsonObject data)
+        public void CommentBodyFromLemmy([FromBody] dynamic data)
         {
-            var memoryProcessed = new List<JsonObject>();
+            var converted = JsonSerializer.Serialize(data);
+            var memoryProcessed = new List<string>();
             // Look for cache key.
             if (!_memoryCache.TryGetValue(COMMENTS_FROM_LEMMY, out memoryProcessed))
             {
-                memoryProcessed = new List<JsonObject>();
+                memoryProcessed = new List<string>();
             }
 
-            memoryProcessed!.Add(data);
+            memoryProcessed!.Add(converted);
             _memoryCache.Set(COMMENTS_FROM_LEMMY, memoryProcessed);
         }
 
