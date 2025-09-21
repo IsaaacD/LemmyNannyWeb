@@ -54,7 +54,7 @@ namespace LemmyWeb.Controllers
             memoryProcessed!.Add(converted);
 
             _memoryCache.Set(POSTS_FROM_LEMMY, memoryProcessed);
-            await _botHub.Clients.All.SendAsync(POSTS_FROM_LEMMY, converted);
+            await _botHub.Clients.All.SendAsync(POSTS_FROM_LEMMY, postData);
         }
 
         [Route("comment")]
@@ -80,7 +80,7 @@ namespace LemmyWeb.Controllers
             memoryProcessed!.Add(converted);
 
             _memoryCache.Set(COMMENTS_FROM_LEMMY, memoryProcessed);
-            await _botHub.Clients.All.SendAsync(COMMENTS_FROM_LEMMY, converted);
+            await _botHub.Clients.All.SendAsync(COMMENTS_FROM_LEMMY, postData);
         }
     }
 }
