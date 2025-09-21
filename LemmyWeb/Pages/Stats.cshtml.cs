@@ -17,7 +17,7 @@ namespace LemmyWeb.Pages
         public void OnGet()
         {
             var stats = new LemmNannyStats();
-            if (!_memoryCache.TryGetValue(Webhook.STATS_KEY, out stats))
+            if (!_memoryCache.TryGetValue(HostWebhookController.STATS_KEY, out stats))
             {
                 stats = new LemmNannyStats();
             }

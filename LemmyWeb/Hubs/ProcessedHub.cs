@@ -32,7 +32,7 @@ namespace LemmyWeb.Hubs
             _memoryCache.Set(USERS_KEY, numberUsers);
 
             var processeds = new List<Processed>();
-            if (!_memoryCache.TryGetValue(Webhook.PROCESSED_KEY, out processeds))
+            if (!_memoryCache.TryGetValue(HostWebhookController.PROCESSED_KEY, out processeds))
             {
                 processeds = new List<Processed>();
             }
