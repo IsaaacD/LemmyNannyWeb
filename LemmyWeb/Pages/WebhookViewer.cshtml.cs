@@ -12,25 +12,25 @@ namespace LemmyWeb.Pages
     {
         private readonly IMemoryCache _memoryCache;
 
-        public List<Post> Posts { get; set; } = new List<Post>();
-        public List<Comment> Comments { get; set; } = new List<Comment>();
+        public List<string> Posts { get; set; } = new List<string>();
+        public List<string> Comments { get; set; } = new List<string>();
         public WebhookViewerModel(IMemoryCache memoryCache)
         {
             _memoryCache = memoryCache;
         }
         public void OnGet()
         {
-            var comments = new List<Comment>();
+            var comments = new List<string>();
             if (!_memoryCache.TryGetValue(BotWebhookController.COMMENTS_FROM_LEMMY, out comments))
             {
-                comments = new List<Comment>();
+                comments = new List<string>();
             }
             Comments = comments!;
 
-            var posts = new List<Post>();
+            var posts = new List<string>();
             if (!_memoryCache.TryGetValue(BotWebhookController.POSTS_FROM_LEMMY, out posts))
             {
-                posts = new List<Post>();
+                posts = new List<string>();
             }
             Posts = posts!;
         }

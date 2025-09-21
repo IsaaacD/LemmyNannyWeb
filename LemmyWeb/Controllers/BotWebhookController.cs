@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace LemmyWeb.Controllers
 {
@@ -24,17 +26,18 @@ namespace LemmyWeb.Controllers
         }
         [Route("post")]
         [HttpPost]
-        public async Task PostBodyFromLemmy(Post? post)
+        public async Task PostBodyFromLemmy(object post)
         {
-            var memoryProcessed = new List<Post>();
+            var a = JsonSerializer.Serialize(post);
+            var memoryProcessed = new List<string>();
             // Look for cache key.
             if (!_memoryCache.TryGetValue(POSTS_FROM_LEMMY, out memoryProcessed))
             {
-                memoryProcessed = new List<Post>();
+                memoryProcessed = new List<string>();
             }
-            if (post != null)
+            if (a != null)
             {
-                memoryProcessed!.Add(post!);
+                memoryProcessed!.Add(a!);
             }
             _memoryCache.Set(POSTS_FROM_LEMMY, memoryProcessed);
             await _botHub.Clients.All.SendAsync(POSTS_FROM_LEMMY, post);
@@ -42,17 +45,18 @@ namespace LemmyWeb.Controllers
 
         [Route("comment")]
         [HttpPost]
-        public async Task CommentBodyFromLemmy(Comment? comment)
+        public async Task CommentBodyFromLemmy(object comment)
         {
-            var memoryProcessed = new List<Comment>();
+            var a = JsonSerializer.Serialize(comment);
+            var memoryProcessed = new List<string>();
             // Look for cache key.
             if (!_memoryCache.TryGetValue(COMMENTS_FROM_LEMMY, out memoryProcessed))
             {
-                memoryProcessed = new List<Comment>();
+                memoryProcessed = new List<string>();
             }
-            if (comment != null)
+            if (a != null)
             {
-                memoryProcessed!.Add(comment!);
+                memoryProcessed!.Add(a!);
             }
             _memoryCache.Set(COMMENTS_FROM_LEMMY, memoryProcessed);
 
