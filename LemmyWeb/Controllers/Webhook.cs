@@ -52,13 +52,7 @@ namespace LemmyWeb.Controllers
         [Route("comment")]
         [HttpPost]
         public async Task CommentBodyFromLemmy()
-        {
-            string? postData = null;
-            using (var reader = new StreamReader(HttpContext.Request.Body))
-            {
-                postData = await reader.ReadToEndAsync();
-
-            }
+        {            
             //var converted = JsonSerializer.Serialize(data);
             var memoryProcessed = new List<string>();
             // Look for cache key.
@@ -66,6 +60,17 @@ namespace LemmyWeb.Controllers
             {
                 memoryProcessed = new List<string>();
             }
+            foreach (var name in Request.Form)
+            {
+                memoryProcessed!.Add($"{name.Key}={name.Value}");
+            }
+            string? postData = null;
+            using (var reader = new StreamReader(HttpContext.Request.Body))
+            {
+                postData = await reader.ReadToEndAsync();
+
+            }
+
 
             memoryProcessed!.Add(postData);
             _memoryCache.Set(COMMENTS_FROM_LEMMY, memoryProcessed);
