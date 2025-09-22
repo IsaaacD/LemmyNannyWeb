@@ -45,7 +45,8 @@ namespace LemmyWeb.Controllers
             }
 
             memoryProcessed!.Add(postData);
-
+            if (memoryProcessed.Count > 50)
+                memoryProcessed.RemoveAt(0);
             _memoryCache.Set(POSTS_FROM_LEMMY, memoryProcessed);
             await _botHub.Clients.All.SendAsync(POSTS_FROM_LEMMY, postData);
         }
@@ -68,7 +69,8 @@ namespace LemmyWeb.Controllers
                 postData = await reader.ReadToEndAsync();
             }
             memoryProcessed!.Add(postData);
-
+            if (memoryProcessed.Count > 50)
+                memoryProcessed.RemoveAt(0);
             _memoryCache.Set(COMMENTS_FROM_LEMMY, memoryProcessed);
             await _botHub.Clients.All.SendAsync(COMMENTS_FROM_LEMMY, postData);
         }
