@@ -131,8 +131,7 @@ function addListItem(processed) {
                 <div>
                     <i class="fas fa-solid ${processed.processedType === 1 ? 'fa-comment' : 'fa-signs-post'}"></i>
                 </div>
-                <div>
-                ${processed.commentNumber}
+                <div style="min-height:1em;">
                 </div>
             </div>
             
